@@ -140,25 +140,10 @@ if st.button("Predict CMM"):
         shap_html = f"<head>{shap.getjs()}</head><body>{force_plot_html.html()}</body>"
         components.html(shap_html, height=1000,width='100%')
 
-        ####  SHAP Waterfall Plot ####
-        st.subheader("💧 SHAP Waterfall Plot")
-        # 创建waterfall_plot
-        exp = shap.Explanation(
-            values=shap_values[sample_index, :, 1],  # 类别1的SHAP值
-            base_values=explainer.expected_value[1], # 类别1的基准值
-            data=df_input.iloc[sample_index].values, # 当前样本的原始特征值
-            feature_names=df_input.columns           # 特征名称
-            )
-
-        # 创建瀑布图
-        shap.plots.waterfall(exp, max_display=10, show=False) # max_display控制显示的特征数量
-        plt.tight_layout() # 调整布局，防止标签重叠
-        # 在Streamlit中显示Matplotlib图表
-        st.pyplot(plt.gcf(), width=1000,dpi=500)  # 禁用自动扩展use_container_width=False
-
     except Exception as e:
         st.error(f"Prediction process error:{str(e)}")
 
 
 ##打开终端win+R,再运行streamlit run "C:\Users\HZH\Desktop\CHARLS心脏代谢共病\streamlit.app\RF\prediction.py"##
+
 
