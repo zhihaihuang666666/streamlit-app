@@ -12,7 +12,7 @@ import streamlit.components.v1 as components
 
 ## ===================== 加载模型 =====================##
 #MODEL_PATH = "C:/Users/HZH/Desktop/CHARLS心脏代谢共病/streamlit.app/RF/rf_model.pkl"
-model = joblib.load(rf_model.pkl)
+model = joblib.load("rf_model.pkl")
 
 # 查看特征 - 这会显示模型期望的特征顺序
 model_feature_names = model.feature_names_in_
@@ -158,5 +158,6 @@ if st.button("Predict CMM"):
 
     except Exception as e:
         st.error(f"Prediction process error:{str(e)}")
+
 
 ##打开终端win+R,再运行streamlit run "C:\Users\HZH\Desktop\CHARLS心脏代谢共病\streamlit.app\RF\prediction.py"##
