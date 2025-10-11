@@ -154,10 +154,11 @@ if st.button("Predict CMM"):
         shap.plots.waterfall(exp, max_display=10, show=False) # max_display控制显示的特征数量
         plt.tight_layout() # 调整布局，防止标签重叠
         # 在Streamlit中显示Matplotlib图表
-        st.pyplot(plt.gcf(), width=1200,dpi=500)  # 禁用自动扩展use_container_width=False
+        st.pyplot(plt.gcf(), width=1000,dpi=500)  # 禁用自动扩展use_container_width=False
 
     except Exception as e:
         st.error(f"Prediction process error:{str(e)}")
 
 
 ##打开终端win+R,再运行streamlit run "C:\Users\HZH\Desktop\CHARLS心脏代谢共病\streamlit.app\RF\prediction.py"##
+
