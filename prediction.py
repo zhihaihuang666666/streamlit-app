@@ -91,7 +91,7 @@ for i, feature in enumerate(FEATURES):
         input_data[feature] = val
 
 # 预测按钮与逻辑
-if st.button("Predict CMM"):
+if st.button("👉🏻 Predict CMM"):
     try:
         # 构造输入DataFrame，确保列顺序与模型期望一致
         df_input = pd.DataFrame([input_data], columns=FEATURES)
@@ -145,6 +145,7 @@ if st.button("Predict CMM"):
 
 
 ##打开终端win+R,再运行streamlit run "C:\Users\HZH\Desktop\CHARLS心脏代谢共病\streamlit.app\RF\prediction.py"##
+
 
 
 
