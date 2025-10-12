@@ -44,7 +44,7 @@ FEATURE_NAMES = {
 # 设置Streamlit页面配置：页面标题和宽屏布局
 st.set_page_config(page_title="CMM Prediction Model", layout="wide")
 # 设置应用程序主标题
-st.title("🫀 CMM Prediction Model (Random Forest Model )")
+st.title("🫀 CMM Prediction Model ")
 
 ## ===================== 单样本预测 =============================##
 st.header("🔹 Predict CMM")
@@ -145,5 +145,6 @@ if st.button("Predict CMM"):
 
 
 ##打开终端win+R,再运行streamlit run "C:\Users\HZH\Desktop\CHARLS心脏代谢共病\streamlit.app\RF\prediction.py"##
+
 
 
