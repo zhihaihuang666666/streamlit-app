@@ -31,12 +31,13 @@ NUMERICAL_FEATURES = [f for f in FEATURES if f not in CATEGORICAL_FEATURES]
 FEATURE_NAMES = {
     "Age": "Age(years)",
     "FI": "Frailty Index",
+    "ALDs": "ALDs",
     "Weight": "Weight(kg)",
-    "Waist": "Waist(cm)",
     "SBP": "SBP(mmHg)",
+    "DBP": "DBP(mmHg)",
     "FBG": "FBG(mg/dL)",
+    "HDL-C": "HDL-C(mg/dL)",
     "HbA1c": "HbA1c(%)",
-    "TyG": "TyG",   
     "Dyslipidaemia": "Dyslipidaemia",
 }
 
@@ -44,7 +45,7 @@ FEATURE_NAMES = {
 # 设置Streamlit页面配置：页面标题和宽屏布局
 st.set_page_config(page_title="CMM Prediction Model", layout="wide")
 # 设置应用程序主标题
-st.title("🫀 CMM Prediction Model ")
+st.title("🫀 CMM Prediction Model")
 
 ## ===================== 单样本预测 =============================##
 st.header("🔹 Predict CMM")
@@ -72,21 +73,21 @@ for i, feature in enumerate(FEATURES):
             if feature == "Age":
                 val = st.number_input(f"{feature_name}", min_value=45, max_value=120, value=60, step=1)
             elif feature == "FI":
-                val = st.number_input(f"{feature_name}", min_value=0.00, max_value=1.00, value=0.50, step=0.01) 
-            elif feature == "Weight":
-                # 将所有参数统一为浮点数，与step=0.5保持一致
-                val = st.number_input(f"{feature_name}", min_value=30.0, max_value=150.0, value=60.0, step=0.1)  
-            elif feature == "Waist":
-                # 将所有参数统一为浮点数，与step=0.5保持一致
-                val = st.number_input(f"{feature_name}", min_value=3.0, max_value=150.0, value=70.0, step=0.1)   
+                val = st.number_input(f"{feature_name}", min_value=0.00, max_value=1.00, value=0.20, step=0.01) 
+            elif feature == "ALDs":
+                val = st.number_input(f"{feature_name}", min_value=0, max_value=6, value=1, step=1)   
             elif feature == "SBP":
                 val = st.number_input(f"{feature_name}", min_value=60, max_value=220, value=120, step=1)
+            elif feature == "DBP":
+                val = st.number_input(f"{feature_name}", min_value=30, max_value=160, value=80, step=1)
+            elif feature == "Weight":
+                val = st.number_input(f"{feature_name}", min_value=30.0, max_value=150.0, value=60.0, step=0.1)       
             elif feature == "FBG":
                 val = st.number_input(f"{feature_name}", min_value=50.0, max_value=260.0, value=110.0, step=0.1)
+            elif feature == "HDL-C":
+                val = st.number_input(f"{feature_name}", min_value=20.0, max_value=100.0, value=40.0, step=0.1)    
             elif feature == "HbA1c":
                 val = st.number_input(f"{feature_name}", min_value=3.0, max_value=15.0, value=5.0, step=0.1)
-            elif feature == "TyG":
-                val = st.number_input(f"{feature_name}", min_value=5.0, max_value=12.0, value=8.0, step=0.1)
         # 将用户输入的特征值存储到input_data字典中，键为特征名，值为用户输入值
         input_data[feature] = val
 
@@ -185,6 +186,7 @@ if st.button("👉🏻 Predict CMM"):
         st.error(f"Prediction process error:{str(e)}")
 
 ##打开终端win+R,再运行streamlit run "C:\Users\HZH\Desktop\CHARLS心脏代谢共病\streamlit.app\RF\prediction.py"##
+
 
 
 
