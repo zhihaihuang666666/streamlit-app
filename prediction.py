@@ -29,15 +29,15 @@ NUMERICAL_FEATURES = [f for f in FEATURES if f not in CATEGORICAL_FEATURES]
 
 # 特征映射（提升用户体验）
 FEATURE_NAMES = {
-    "Age": "Age(years)",
+    "Age": "Age (years)",
     "FI": "Frailty Index",
     "ALDs": "ALDs",
-    "Weight": "Weight(kg)",
-    "SBP": "SBP(mmHg)",
-    "DBP": "DBP(mmHg)",
-    "FBG": "FBG(mg/dL)",
-    "HDL-C": "HDL-C(mg/dL)",
-    "HbA1c": "HbA1c(%)",
+    "Weight": "Weight (kg)",
+    "SBP": "SBP (mmHg)",
+    "DBP": "DBP (mmHg)",
+    "FBG": "FBG (mg/dL)",
+    "HDL-C": "HDL-C (mg/dL)",
+    "HbA1c": "HbA1c (%)",
     "Dyslipidaemia": "Dyslipidaemia",
 }
 
@@ -186,6 +186,7 @@ if st.button("👉🏻 Predict CMM"):
         st.error(f"Prediction process error:{str(e)}")
 
 ##打开终端win+R,再运行streamlit run "C:\Users\HZH\Desktop\CHARLS心脏代谢共病\streamlit.app\RF\prediction.py"##
+
 
 
 
