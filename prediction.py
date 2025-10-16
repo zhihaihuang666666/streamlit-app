@@ -116,7 +116,7 @@ if st.button("👉🏻 Predict CMM"):
         # 显示结果
         st.success(f"CMM Probability: {y_proba:.3f}")
         
-     ## ===================== SHAP分析 =====================##
+    ## ===================== SHAP分析 =====================##
         # 初始化SHAP解释器
         explainer = shap.TreeExplainer(model)
         # 计算SHAP值
@@ -124,10 +124,9 @@ if st.button("👉🏻 Predict CMM"):
         # 解释第n+1个样本（索引从0开始）。注意：只能为0
         sample_index = 0   
         # 设定要显示的特征数量 
-        top_n = 9 
-        
+        top_n = 10 
         ####  SHAP Force Plot ####
-        st.subheader("📊 SHAP Force Plot")         
+        st.subheader("📊 Force Plot")         
         # 创建force_plot
         force_plot_html = shap.force_plot(
             explainer.expected_value[1],        
@@ -138,13 +137,55 @@ if st.button("👉🏻 Predict CMM"):
             contribution_threshold=0 )
         # 将SHAP的force_plot转换为HTML并在Streamlit中显示
         shap_html = f"<head>{shap.getjs()}</head><body>{force_plot_html.html()}</body>"
-        components.html(shap_html, height=1000,width='100%')
+        components.html(shap_html, height=280,width='100%') # 调整高度以适应列布局
+       
+        #### 创建左右两列布局 ####
+        col1, col2 = st.columns(2)
+        #### 1.左列 ####
+        with col1:
+            ####  SHAP Waterfall Plot ####
+            st.subheader("💧 Waterfall Plot")
+            # 创建新的图形对象
+            fig1, ax1 = plt.subplots(figsize=(8, 10))
+            # 创建waterfall_plot
+            exp = shap.Explanation(
+            values=shap_values[sample_index, :, 1],  # 类别1的SHAP值
+            base_values=explainer.expected_value[1], # 类别1的基准值
+            data=df_input.iloc[sample_index].values, # 当前样本的原始特征值
+            feature_names=df_input.columns           # 特征名称
+            )
+            # 创建瀑布图
+            shap.plots.waterfall(exp, max_display=10, show=False) # max_display控制显示的特征数量
+            plt.tight_layout() # 调整布局，防止标签重叠
+            # 在Streamlit中显示Matplotlib图表
+            st.pyplot(fig1, width=1000,dpi=500) 
+
+        #### 2.右列 ####
+        with col2:
+            ####  SHAP决策图 ####
+            st.subheader( "🎯 Decision Plot")
+            # 创建新的图形对象
+            fig2, ax2 = plt.subplots(figsize=(8, 10))
+            # 设置类别索引（假设是二分类问题，类别1为正类）
+            class_index = 1
+            # 创建SHAP决策图
+            shap.decision_plot(
+            base_value=explainer.expected_value[class_index],
+            shap_values=shap_values[sample_index, :, class_index],
+            feature_names=list(df_input.columns),  
+            feature_order='importance',  # 按重要性排序特征
+            highlight=0,  # 高亮第一个特征
+            show=False
+            )
+            plt.tight_layout() # 调整布局，防止标签重叠
+            # 在Streamlit中显示Matplotlib图表
+            st.pyplot(fig2, width=1100,dpi=500)  
 
     except Exception as e:
         st.error(f"Prediction process error:{str(e)}")
 
-
 ##打开终端win+R,再运行streamlit run "C:\Users\HZH\Desktop\CHARLS心脏代谢共病\streamlit.app\RF\prediction.py"##
+
 
 
 
