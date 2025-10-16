@@ -48,7 +48,7 @@ st.set_page_config(page_title="CMM Prediction Model", layout="wide")
 st.title("🫀 CMM Prediction Model")
 
 ## ===================== 单样本预测 =============================##
-st.header("🔹 Predict CMM")
+#st.header("🔹 Predict CMM")
 
 # 创建空字典用于存储用户输入的所有特征值
 input_data = {} 
@@ -186,6 +186,7 @@ if st.button("👉🏻 Predict CMM"):
         st.error(f"Prediction process error:{str(e)}")
 
 ##打开终端win+R,再运行streamlit run "C:\Users\HZH\Desktop\CHARLS心脏代谢共病\streamlit.app\RF\prediction.py"##
+
 
 
 
