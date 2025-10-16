@@ -115,7 +115,7 @@ if st.button("👉🏻 Predict CMM"):
         y_proba = model.predict_proba(X_scaled)[0][1]
         
         # 显示结果
-        st.success(f"CMM Probability: {y_proba:.3f}")
+        st.success(f"👉🏻 CMM Probability: {(y_proba * 100):.1f}%")
         
     ## ===================== SHAP分析 =====================##
         # 初始化SHAP解释器
@@ -186,6 +186,7 @@ if st.button("👉🏻 Predict CMM"):
         st.error(f"Prediction process error:{str(e)}")
 
 ##打开终端win+R,再运行streamlit run "C:\Users\HZH\Desktop\CHARLS心脏代谢共病\streamlit.app\RF\prediction.py"##
+
 
 
 
