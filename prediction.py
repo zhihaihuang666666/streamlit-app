@@ -146,7 +146,7 @@ if st.button("👉🏻 Predict CMM"):
             ####  SHAP Waterfall Plot ####
             st.subheader("💧 Waterfall Plot")
             # 创建新的图形对象
-            fig1, ax1 = plt.subplots(figsize=(8, 10))
+            fig1, ax1 = plt.subplots(figsize=(8, 7))
             # 创建waterfall_plot
             exp = shap.Explanation(
             values=shap_values[sample_index, :, 1],  # 类别1的SHAP值
@@ -158,14 +158,14 @@ if st.button("👉🏻 Predict CMM"):
             shap.plots.waterfall(exp, max_display=10, show=False) # max_display控制显示的特征数量
             plt.tight_layout() # 调整布局，防止标签重叠
             # 在Streamlit中显示Matplotlib图表
-            st.pyplot(fig1, width=800,dpi=500) 
+            st.pyplot(fig1, width=700,dpi=500) 
 
         #### 2.右列 ####
         with col2:
             ####  SHAP决策图 ####
             st.subheader( "🎯 Decision Plot")
             # 创建新的图形对象
-            fig2, ax2 = plt.subplots(figsize=(8, 10))
+            fig2, ax2 = plt.subplots(figsize=(8, 7))
             # 设置类别索引（假设是二分类问题，类别1为正类）
             class_index = 1
             # 创建SHAP决策图
@@ -185,6 +185,7 @@ if st.button("👉🏻 Predict CMM"):
         st.error(f"Prediction process error:{str(e)}")
 
 ##打开终端win+R,再运行streamlit run "C:\Users\HZH\Desktop\CHARLS心脏代谢共病\streamlit.app\RF\prediction.py"##
+
 
 
 
