@@ -147,7 +147,7 @@ if st.button("👉🏻 Predict CMM"):
             ####  SHAP Waterfall Plot ####
             st.subheader("💧 Waterfall Plot")
             # 创建新的图形对象
-            fig1, ax1 = plt.subplots(figsize=(8, 8))
+            fig1, ax1 = plt.subplots(figsize=(8, 5))
             # 创建waterfall_plot
             exp = shap.Explanation(
             values=shap_values[sample_index, :, 1],  # 类别1的SHAP值
@@ -186,6 +186,7 @@ if st.button("👉🏻 Predict CMM"):
         st.error(f"Prediction process error:{str(e)}")
 
 ##打开终端win+R,再运行streamlit run "C:\Users\HZH\Desktop\CHARLS心脏代谢共病\streamlit.app\RF\prediction.py"##
+
 
 
 
