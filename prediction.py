@@ -81,13 +81,13 @@ for i, feature in enumerate(FEATURES):
             elif feature == "DBP":
                 val = st.number_input(f"{feature_name}", min_value=30, max_value=160, value=80, step=1)
             elif feature == "Weight":
-                val = st.number_input(f"{feature_name}", min_value=30.0, max_value=150.0, value=60.0, step=0.1)       
+                val = st.number_input(f"{feature_name}", min_value=30.00, max_value=150.00, value=60.00, step=0.01)       
             elif feature == "FBG":
-                val = st.number_input(f"{feature_name}", min_value=50.0, max_value=260.0, value=110.0, step=0.1)
+                val = st.number_input(f"{feature_name}", min_value=50.00, max_value=260.00, value=110.00, step=0.01)
             elif feature == "HDL-C":
-                val = st.number_input(f"{feature_name}", min_value=20.0, max_value=100.0, value=40.0, step=0.1)    
+                val = st.number_input(f"{feature_name}", min_value=20.00, max_value=100.00, value=40.00, step=0.01)    
             elif feature == "HbA1c":
-                val = st.number_input(f"{feature_name}", min_value=3.0, max_value=15.0, value=5.0, step=0.1)
+                val = st.number_input(f"{feature_name}", min_value=3.00, max_value=15.00, value=5.00, step=0.01)
         # 将用户输入的特征值存储到input_data字典中，键为特征名，值为用户输入值
         input_data[feature] = val
 
@@ -186,6 +186,7 @@ if st.button("👉🏻 Predict CMM"):
         st.error(f"Prediction process error:{str(e)}")
 
 ##打开终端win+R,再运行streamlit run "C:\Users\HZH\Desktop\CHARLS心脏代谢共病\streamlit.app\RF\prediction.py"##
+
 
 
 
