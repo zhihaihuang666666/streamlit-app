@@ -71,7 +71,7 @@ for i, feature in enumerate(FEATURES):
         else:
             # 数值特征使用数字输入，并设置合理范围
             if feature == "Age":
-                val = st.number_input(f"{feature_name}", min_value=45, max_value=120, value=60, step=1)
+                val = st.number_input(f"{feature_name}", min_value=20, max_value=120, value=60, step=1)
             elif feature == "FI":
                 val = st.number_input(f"{feature_name}", min_value=0.00, max_value=1.00, value=0.20, step=0.01) 
             elif feature == "ALDs":
@@ -144,6 +144,7 @@ if st.button("👉🏻 Predict CMM"):
         st.error(f"Prediction process error:{str(e)}")
 
 ##打开终端win+R,再运行streamlit run "C:\Users\HZH\Desktop\CHARLS心脏代谢共病\streamlit.app\RF\prediction.py"##
+
 
 
 
