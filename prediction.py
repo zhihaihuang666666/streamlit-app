@@ -24,7 +24,7 @@ print("模型训练时的特征数量：", len(model_feature_names))
 FEATURES = model_feature_names  # 使用模型的特征顺序
 
 # 特征类型配置：区分分类特征（二元）和数值特征
-CATEGORICAL_FEATURES = ["Dyslipidaemia"]
+CATEGORICAL_FEATURES = ["Dyslipidemia"]
 NUMERICAL_FEATURES = [f for f in FEATURES if f not in CATEGORICAL_FEATURES]
 
 # 特征映射（提升用户体验）
@@ -38,7 +38,7 @@ FEATURE_NAMES = {
     "FBG": "FBG (mg/dL)",
     "HDL-C": "HDL-C (mg/dL)",
     "HbA1c": "HbA1c (%)",
-    "Dyslipidaemia": "Dyslipidaemia",
+    "Dyslipidemia": "Dyslipidemia",
 }
 
 ## ===================== Streamlit 页面配置 =====================##
@@ -138,54 +138,13 @@ if st.button("👉🏻 Predict CMM"):
             contribution_threshold=0 )
         # 将SHAP的force_plot转换为HTML并在Streamlit中显示
         shap_html = f"<head>{shap.getjs()}</head><body>{force_plot_html.html()}</body>"
-        components.html(shap_html, height=280,width='100%') # 调整高度以适应列布局
+        components.html(shap_html, height=300,width='100%') # 调整高度以适应列布局
        
-        #### 创建左右两列布局 ####
-        col1, col2 = st.columns(2)
-        #### 1.左列 ####
-        with col1:
-            ####  SHAP Waterfall Plot ####
-            st.subheader("💧 Waterfall Plot")
-            # 创建新的图形对象
-            fig1, ax1 = plt.subplots(figsize=(8, 5))
-            # 创建waterfall_plot
-            exp = shap.Explanation(
-            values=shap_values[sample_index, :, 1],  # 类别1的SHAP值
-            base_values=explainer.expected_value[1], # 类别1的基准值
-            data=df_input.iloc[sample_index].values, # 当前样本的原始特征值
-            feature_names=df_input.columns           # 特征名称
-            )
-            # 创建瀑布图
-            shap.plots.waterfall(exp, max_display=10, show=False) # max_display控制显示的特征数量
-            plt.tight_layout() # 调整布局，防止标签重叠
-            # 在Streamlit中显示Matplotlib图表
-            st.pyplot(fig1, width=800,dpi=600) 
-
-        #### 2.右列 ####
-        with col2:
-            ####  SHAP决策图 ####
-            st.subheader( "🎯 Decision Plot")
-            # 创建新的图形对象
-            fig2, ax2 = plt.subplots(figsize=(8, 7))
-            # 设置类别索引（假设是二分类问题，类别1为正类）
-            class_index = 1
-            # 创建SHAP决策图
-            shap.decision_plot(
-            base_value=explainer.expected_value[class_index],
-            shap_values=shap_values[sample_index, :, class_index],
-            feature_names=list(df_input.columns),  
-            feature_order='importance',  # 按重要性排序特征
-            highlight=0,  # 高亮第一个特征
-            show=False
-            )
-            plt.tight_layout() # 调整布局，防止标签重叠
-            # 在Streamlit中显示Matplotlib图表
-            st.pyplot(fig2, width=900,dpi=600)  
-
     except Exception as e:
         st.error(f"Prediction process error:{str(e)}")
 
 ##打开终端win+R,再运行streamlit run "C:\Users\HZH\Desktop\CHARLS心脏代谢共病\streamlit.app\RF\prediction.py"##
+
 
 
 
