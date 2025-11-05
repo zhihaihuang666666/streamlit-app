@@ -31,7 +31,7 @@ NUMERICAL_FEATURES = [f for f in FEATURES if f not in CATEGORICAL_FEATURES]
 FEATURE_NAMES = {
     "Age": "Age (years)",
     "FI": "Frailty Index",
-    "ALDs": "ALDs",
+    "ADLs": "ADLs",
     "Weight": "Weight (kg)",
     "SBP": "SBP (mmHg)",
     "DBP": "DBP (mmHg)",
@@ -74,7 +74,7 @@ for i, feature in enumerate(FEATURES):
                 val = st.number_input(f"{feature_name}", min_value=45, max_value=120, value=60, step=1)
             elif feature == "FI":
                 val = st.number_input(f"{feature_name}", min_value=0.00, max_value=1.00, value=0.20, step=0.01) 
-            elif feature == "ALDs":
+            elif feature == "ADLs":
                 val = st.number_input(f"{feature_name}", min_value=0, max_value=6, value=1, step=1)   
             elif feature == "SBP":
                 val = st.number_input(f"{feature_name}", min_value=60, max_value=220, value=120, step=1)
@@ -144,6 +144,7 @@ if st.button("👉🏻 Predict CMM"):
         st.error(f"Prediction process error:{str(e)}")
 
 ##打开终端win+R,再运行streamlit run "C:\Users\HZH\Desktop\CHARLS心脏代谢共病\streamlit.app\RF\prediction.py"##
+
 
 
 
