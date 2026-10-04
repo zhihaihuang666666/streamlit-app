@@ -6,169 +6,170 @@ import joblib
 from sklearn.preprocessing import LabelEncoder, StandardScaler
 import shap
 import matplotlib.pyplot as plt
-# 导入必要的组件以显示SHAP的HTML可视化
 import streamlit.components.v1 as components
 
 
 ## ===================== 加载模型 =====================##
-#MODEL_PATH = "C:/Users/HZH/Desktop/CHARLS心脏代谢共病/streamlit.app/RF/rf_model.pkl"
-model = joblib.load("rf_model.pkl")
+#model = joblib.load("C:/Users/HZH/Desktop/CMM二修/streamlit.app/RF/rf_model.pkl") # 本地部署
+model = joblib.load("rf_model.pkl") # Streamlit部署
 
-# 查看特征 - 这会显示模型期望的特征顺序
-model_feature_names = model.feature_names_in_
-print("模型训练时的特征名：", model_feature_names)
-print("模型训练时的特征数量：", len(model_feature_names))
+# 查看模型训练时的特征
+MODEL_FEATURES = list(model.feature_names_in_)
+print("模型训练时的特征名：", MODEL_FEATURES)
+print("模型训练时的特征数量：", len(MODEL_FEATURES))
+
 
 ## ===================== 特征列表与配置 =====================##
-# 修正特征顺序，使其与模型训练时的顺序一致
-FEATURES = model_feature_names  # 使用模型的特征顺序
-
-# 特征类型配置：区分分类特征（二元）和数值特征
-CATEGORICAL_FEATURES = ["Dyslipidemia"]
+# 页面显示顺序：每两个变量显示在同一行
+FEATURES = [
+    "Gender", "Age", 
+    "Hypertension", "Lung disease",
+    "Memory problem", "SBP",
+    "Weight", "WHtR",
+    "HDLC", "LDLC",
+    "FBG", "HbA1c"
+]
+# 分类变量
+CATEGORICAL_FEATURES = ["Gender", "Hypertension", "Lung disease", "Memory problem"]
+# 数值变量
 NUMERICAL_FEATURES = [f for f in FEATURES if f not in CATEGORICAL_FEATURES]
-
-# 特征映射（提升用户体验）
+# 页面显示名称
 FEATURE_NAMES = {
     "Age": "Age (years)",
-    "FI": "Frailty Index",
-    "ADLs": "ADLs",
-    "Weight": "Weight (kg)",
+    "Gender": "Gender",
+    "Hypertension": "Hypertension",
+    "Lung disease": "Lung disease",
+    "Memory problem": "Memory problem",
     "SBP": "SBP (mmHg)",
-    "DBP": "DBP (mmHg)",
+    "Weight": "Weight (kg)",
+    "WHtR": "Waist-to-height ratio",
+    "HDLC": "HDL-C (mg/dL)",
+    "LDLC": "LDL-C (mg/dL)",
     "FBG": "FBG (mg/dL)",
-    "HDL-C": "HDL-C (mg/dL)",
-    "HbA1c": "HbA1c (%)",
-    "Dyslipidemia": "Dyslipidemia",
+    "HbA1c": "HbA1c (%)"
 }
 
-## ===================== Streamlit 页面配置 =====================##
-# 设置Streamlit页面配置：页面标题和宽屏布局
+
+## ===================== Streamlit页面配置 =====================##
 st.set_page_config(page_title="CMM Prediction Model", layout="wide")
-# 设置应用程序主标题
 st.title("🫀 CMM Prediction Model")
 
-## ===================== 单样本预测 =============================##
-#st.header("🔹 Predict CMM")
 
-# 创建空字典用于存储用户输入的所有特征值
-input_data = {} 
+## ===================== 单样本预测 =====================##
+input_data = {}
 col1, col2 = st.columns(2)
 
-# 遍历特征生成输入组件
 for i, feature in enumerate(FEATURES):
-    # 按奇偶分配到不同列
     with col1 if i % 2 == 0 else col2:
         feature_name = FEATURE_NAMES.get(feature, feature)
-        
+
         if feature in CATEGORICAL_FEATURES:
-            # 分类特征使用选择框（0=否，1=是）
-            val = st.selectbox(
-                f"{feature_name}",
-                options=[0, 1],
-                format_func=lambda x: "Yes" if x == 1 else "No",
-                key=feature
-            )
+            if feature == "Gender":
+                val = st.selectbox(
+                    feature_name,
+                    options=[0, 1],
+                    format_func=lambda x: "Male" if x == 1 else "Female",
+                    key=feature,
+                    index=1
+                )
+            else:
+                val = st.selectbox(
+                    feature_name,
+                    options=[0, 1],
+                    format_func=lambda x: "Yes" if x == 1 else "No",
+                    key=feature,
+                    index=1
+                )
+
         else:
-            # 数值特征使用数字输入，并设置合理范围
             if feature == "Age":
-                val = st.number_input(f"{feature_name}", min_value=45, max_value=120, value=60, step=1)
-            elif feature == "FI":
-                val = st.number_input(f"{feature_name}", min_value=0.00, max_value=1.00, value=0.20, step=0.01) 
-            elif feature == "ADLs":
-                val = st.number_input(f"{feature_name}", min_value=0, max_value=6, value=1, step=1)   
+                val = st.number_input(feature_name, min_value=50.0, max_value=150.0, value=50.0, step=1.0)
+
             elif feature == "SBP":
-                val = st.number_input(f"{feature_name}", min_value=60, max_value=220, value=120, step=1)
-            elif feature == "DBP":
-                val = st.number_input(f"{feature_name}", min_value=30, max_value=160, value=80, step=1)
+                val = st.number_input(feature_name, min_value=50.0, max_value=200.0, value=100.0, step=1.0)
+
             elif feature == "Weight":
-                val = st.number_input(f"{feature_name}", min_value=30.00, max_value=150.00, value=60.00, step=0.01)       
+                val = st.number_input(feature_name, min_value=30.0, max_value=200.0, value=60.0, step=0.1)
+
+            elif feature == "WHtR":
+                val = st.number_input(feature_name, min_value=0.00, max_value=1.00, value=0.50, step=0.01)
+
+            elif feature == "HDLC":
+                val = st.number_input(feature_name, min_value=10.0, max_value=200.0, value=50.0, step=0.1)
+
+            elif feature == "LDLC":
+                val = st.number_input(feature_name, min_value=20.0, max_value=300.0, value=100.0, step=0.1)
+
             elif feature == "FBG":
-                val = st.number_input(f"{feature_name}", min_value=50.00, max_value=260.00, value=110.00, step=0.01)
-            elif feature == "HDL-C":
-                val = st.number_input(f"{feature_name}", min_value=20.00, max_value=100.00, value=40.00, step=0.01)    
+                val = st.number_input(feature_name, min_value=50.0, max_value=600.0, value=100.0, step=0.1)
+
             elif feature == "HbA1c":
-                val = st.number_input(f"{feature_name}", min_value=3.00, max_value=15.00, value=5.00, step=0.01)
-        # 将用户输入的特征值存储到input_data字典中，键为特征名，值为用户输入值
+                val = st.number_input(feature_name, min_value=3.0, max_value=20.0, value=5.5, step=0.1)
+
         input_data[feature] = val
 
-# 预测按钮与逻辑
-if st.button("👉🏻 Predict CMM"):
+
+## ===================== 预测按钮与逻辑 =====================##
+if st.button("Predict CMM"):
     try:
-        # 构造输入DataFrame，确保列顺序与模型期望一致
+        # 按页面显示顺序构造输入数据
         df_input = pd.DataFrame([input_data], columns=FEATURES)
-        
-        # 处理可能的分类特征（如果有字符串类型）
+
+        # 恢复模型训练时的变量顺序
+        df_input = df_input[MODEL_FEATURES]
+
+        # 字符变量转为数值
         for col in df_input.columns:
             if df_input[col].dtype == object:
                 le = LabelEncoder()
                 df_input[col] = le.fit_transform(df_input[col].astype(str))
-        
-        # 标准化数值特征（注意：实际部署应使用训练时的scaler，此处为简化处理）
-        #scaler = StandardScaler()
-        #X_scaled = scaler.fit_transform(df_input)
+
+        # 随机森林不需要标准化
         X_scaled = df_input
-        
+
         # 模型预测
-        # model.predict返回预测类别数组，[0]表示取第一个样本的预测结果
         y_pred = model.predict(X_scaled)[0]
-        # model.predict_proba返回概率预测数组，[0][1]表示第一个样本预测为类别1的概率
         y_proba = model.predict_proba(X_scaled)[0][1]
-        
-        # 显示结果
-        st.success(f"🫀 CMM Probability: {(y_proba * 100):.1f}%")
-        
-    ## ===================== SHAP分析 =====================##
-        # 初始化SHAP解释器
+
+        # 显示预测结果
+        st.success(f"👉🏻 CMM Probability: {(y_proba * 100):.1f}%")
+
+
+        ## ===================== SHAP分析 =====================##
         explainer = shap.TreeExplainer(model)
-        # 计算SHAP值
         shap_values = explainer.shap_values(X_scaled)
-        # 解释第n+1个样本（索引从0开始）。注意：只能为0
-        sample_index = 0   
-        # 设定要显示的特征数量 
-        top_n = 10 
-        ####  SHAP Force Plot ####
-        st.subheader("📊 Force Plot")         
-        # 创建force_plot
+        sample_index = 0
+        # 兼容不同SHAP版本
+        if isinstance(shap_values, list):
+            shap_values_cmm = shap_values[1][sample_index]
+            expected_value_cmm = explainer.expected_value[1]
+
+        elif np.asarray(shap_values).ndim == 3:
+            shap_values_cmm = shap_values[sample_index, :, 1]
+            expected_value_cmm = np.asarray(explainer.expected_value)[1]
+        else:
+            shap_values_cmm = shap_values[sample_index]
+            expected_value = np.asarray(explainer.expected_value)
+            expected_value_cmm = float(expected_value) if expected_value.ndim == 0 else expected_value[-1]
+
+
+        #### SHAP Force Plot ####
+        st.subheader("📊 Force Plot")
         force_plot_html = shap.force_plot(
-            explainer.expected_value[1],        
-            shap_values[sample_index, :top_n, 1],  
-            features=df_input.iloc[sample_index, :top_n],   
-            feature_names=df_input.columns,  
-            matplotlib=False,                 
-            contribution_threshold=0 )
-        # 将SHAP的force_plot转换为HTML并在Streamlit中显示
+            expected_value_cmm,
+            shap_values_cmm,
+            features=df_input.iloc[sample_index],
+            feature_names=df_input.columns.tolist(),
+            matplotlib=False,
+            contribution_threshold=0
+        )
+
         shap_html = f"<head>{shap.getjs()}</head><body>{force_plot_html.html()}</body>"
-        components.html(shap_html, height=300,width='100%') # 调整高度以适应列布局
-       
+        components.html(shap_html, height=280, width="100%")
+
     except Exception as e:
-        st.error(f"Prediction process error:{str(e)}")
-
-##打开终端win+R,再运行streamlit run "C:\Users\HZH\Desktop\CHARLS心脏代谢共病\streamlit.app\RF\prediction.py"##
+        st.error(f"Prediction process error: {str(e)}")
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+## 终端运行：
+## streamlit run "C:\Users\HZH\Desktop\CMM二修\streamlit.app\RF\prediction.py"
